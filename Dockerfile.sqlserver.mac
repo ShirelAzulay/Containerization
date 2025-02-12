@@ -1,0 +1,8 @@
+FROM --platform=linux/arm64 mcr.microsoft.com/azure-sql-edge:latest
+
+# הגדרת משתני סביבה לפי דרישות התמונה
+ENV ACCEPT_EULA=Y \
+    MSSQL_SA_PASSWORD=YourStrong@Password123 \
+    MSSQL_PID=Developer
+
+EXPOSE 1433

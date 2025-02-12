@@ -1,0 +1,30 @@
+# Use the official Microsoft SQL Server Linux image for ARM64
+FROM --platform=linux/arm64 mcr.microsoft.com/mssql/server:2022-latest
+
+# Accept EULA and set environment variables
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=YourStrong@Password123
+ENV MSSQL_PID=Developer
+
+# Create app directory
+WORKDIR /app
+
+# Expose SQL Server port
+EXPOSE 1433
+
+# Optional: Add initialization scripts if needed
+# COPY init.sql /docker-entrypoint-initdb.d/
+
+# Set user to root to ensure proper permissions
+USER root
+
+# Create necessary directories and set permissions
+RUN mkdir -p /var/opt/mssql/data \
+    && chown -R mssql /var/opt/mssql/data \
+    && chmod -R 755 /var/opt/mssql/data
+
+# Switch back to mssql user
+USER mssql
+
+# The entrypoint is already set in the base image
+# No need to specify ENTRYPOINT or CMD
