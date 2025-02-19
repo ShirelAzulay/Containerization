@@ -65,4 +65,5 @@ ENV Umbraco__CMS__Global__MainDomLock="FileSystemMainDomLock"
 EXPOSE 80
 
 # Set the entry point for the container
-ENTRYPOINT ["dotnet", "MyUmbracoProject.dll"]
+#ENTRYPOINT ["dotnet", "MyUmbracoProject.dll"]
+CMD ["dotnet", "MyUmbracoProject.dll"]
