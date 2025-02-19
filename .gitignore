@@ -35,12 +35,6 @@ rider.project.restore.info
 .vscode/launch.json
 .vscode/extensions.json
 
-appsettings.Development.json
-appsettings-schema.json
-appsettings-schema.Umbraco.Cms.json
-appsettings.json
-appsettings.template.json
-
 
 umbraco/Logs/
 umbraco/Data/
