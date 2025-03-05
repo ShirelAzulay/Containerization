@@ -5,6 +5,7 @@ WORKDIR /src
 
 # Copy the .csproj file and restore NuGet packages
 COPY MyUmbracoProject.csproj ./
+RUN dotnet add package Our.Umbraco.StorageProviders.AWSS3
 RUN dotnet restore MyUmbracoProject.csproj
 
 # Copy the remaining project files and publish the application
@@ -27,6 +28,7 @@ RUN mkdir -p /app/wwwroot/media \
    /app/App_Plugins \
    /app/umbraco \
    /app/logs \
+   && chown -R 1000:1000 /app \
    && chmod -R 777 /app/Data \
    && chmod -R 777 /app/wwwroot/media \
    && chmod -R 777 /app/App_Plugins \
@@ -34,36 +36,30 @@ RUN mkdir -p /app/wwwroot/media \
    && chmod -R 777 /app/logs
 
 # Set essential environment variables
-ENV ASPNETCORE_URLS="http://+:80"                                             
-# Set URL configuration
- # Set development environment
-ENV ASPNETCORE_ENVIRONMENT=Development               
-# Allow missing database installation                        
-ENV Umbraco__CMS__Global__InstallMissingDatabase=true
-# Enable debug mode                       
-ENV Umbraco__CMS__Hosting__Debug=true         
-# Disable colors in logs                              
-ENV ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true 
-# Set unique system ID                        
-ENV Umbraco__CMS__Global__Id="00000000-0000-0000-0000-000000000042"      
-# Enable unattended installation  
-ENV Umbraco__CMS__Unattended__InstallUnattended=true          
- # Set admin username             
-ENV Umbraco__CMS__Unattended__UnattendedUserName="admin"        
-# Set admin email          
-ENV Umbraco__CMS__Unattended__UnattendedUserEmail="admin@example.com"  
-# Set admin password    
-ENV Umbraco__CMS__Unattended__UnattendedUserPassword="AdminPassword123!"   
-# Internal DB
-# Database connection string
-#ENV ConnectionStrings__umbracoDbDSN="Data Source=|DataDirectory|/Umbraco.sqlite.db;Cache=Shared;Foreign Keys=True;Pooling=True"  
+ENV ASPNETCORE_URLS="http://+:80" \
+    ASPNETCORE_ENVIRONMENT=Development \
+    Umbraco__CMS__Global__InstallMissingDatabase=true \
+    Umbraco__CMS__Hosting__Debug=true \
+    ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true \
+    Umbraco__CMS__Global__Id="00000000-0000-0000-0000-000000000042" \
+    Umbraco__CMS__Unattended__InstallUnattended=true \
+    Umbraco__CMS__Unattended__UnattendedUserName="admin" \
+    Umbraco__CMS__Unattended__UnattendedUserEmail="admin@example.com" \
+    Umbraco__CMS__Unattended__UnattendedUserPassword="AdminPassword123!" \
+    Umbraco__CMS__Global__MainDomLock="FileSystemMainDomLock"
 
-# Set filesystem lock configuration
-ENV Umbraco__CMS__Global__MainDomLock="FileSystemMainDomLock"              
+# Optional: Uncomment and set AWS S3 Configuration if needed
+ENV AWS_BUCKET_NAME="1" \
+    AWS_REGION="2" \
+    AWS_ACCESS_KEY_ID="3" \
+    AWS_SECRET_ACCESS_KEY="4"
+    
 
 # Expose port 80 for communication
 EXPOSE 80
 
+# Set user permissions
+USER 1000
+
 # Set the entry point for the container
-#ENTRYPOINT ["dotnet", "MyUmbracoProject.dll"]
 CMD ["dotnet", "MyUmbracoProject.dll"]
